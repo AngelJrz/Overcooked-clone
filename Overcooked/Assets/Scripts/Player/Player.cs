@@ -6,10 +6,23 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 9f;
+    [SerializeField] private Animator animator;
+    private bool isWalking = false;
+
+    void Start()
+    {
+        this.animator = GetComponentInChildren<Animator>();
+    }
 
     private void Update()
     {
-        Vector2 inputVector = new Vector2(0,0);
+        PlayerAcction();
+        ManageAnimation();
+    }
+
+    private void PlayerAcction()
+    {
+        Vector2 inputVector = new Vector2(0, 0);
 
         if (Input.GetKey(KeyCode.W))
         {
@@ -42,5 +55,24 @@ public class Player : MonoBehaviour
 
         float rotateSpeed = Time.deltaTime * 7f;
         transform.forward = Vector3.Slerp(transform.forward, moveDir, rotateSpeed);
+    }
+
+    private void ManageAnimation()
+    {
+        if (Input.GetKey(KeyCode.W) ||
+            Input.GetKey(KeyCode.S) ||
+            Input.GetKey(KeyCode.A) ||
+            Input.GetKey(KeyCode.D)
+            )
+        {
+            isWalking = true;
+        }
+        else
+        {
+            isWalking = false;
+        }
+
+        animator.SetBool("IsWalking", isWalking);
+
     }
 }
