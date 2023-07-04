@@ -8,17 +8,40 @@ public class Player : MonoBehaviour {
 
     [SerializeField] private float moveSpeed = 9f;
     [SerializeField] private GameInput gameInput;
+    [SerializeField] private LayerMask layerMask;
     private Animator animator;
+    private Vector3 lastInteractDir;
 
     void Start() {
         this.animator = GetComponentInChildren<Animator>();
     }
 
     private void Update() {
+        HandleInteractions();
+        HandleMovement();
+    }
+
+    private void HandleInteractions() {
+        Vector2 inputVector = gameInput.GetMovementVectorNormalized();
+        Vector3 moveDir = new Vector3(inputVector.x, 0f, inputVector.y);
+
+        if (moveDir != Vector3.zero) {
+            lastInteractDir = moveDir;
+        }
+
+        float interactDistance = 1f;
+        if (Physics.Raycast(transform.position, lastInteractDir, out RaycastHit raycastHit, interactDistance, layerMask)) {
+            if(raycastHit.transform.TryGetComponent(out ClearCounter clearCounter)) {
+                clearCounter.Interact();
+            }
+        }
+    }
+
+    private void HandleMovement() {
         Vector2 inputVector = gameInput.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(inputVector.x, 0, inputVector.y);
 
-        float playerRadius = .7f;
+        float playerRadius = .6f;
         float playerHeight = 2f;
         float moveDistance = moveSpeed * Time.deltaTime;
         //bool canMove = !Physics.Raycast(transform.position, moveDir, playerRadius);
@@ -27,7 +50,7 @@ public class Player : MonoBehaviour {
         //**********************************
         // Player movement
         //**********************************
-        if (!canMove ) {
+        if (!canMove) {
             // cannot move towards moveDir
 
             // Attempt only X movement
