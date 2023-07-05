@@ -64,6 +64,7 @@ public class Player : MonoBehaviour {
                 //}
 
                 // If the player returns to the same counter shows the selected prefab
+                selectedCounter = clearCounter;
                 SetSelectedCounter(clearCounter);
             } else {
                 SetSelectedCounter(null);

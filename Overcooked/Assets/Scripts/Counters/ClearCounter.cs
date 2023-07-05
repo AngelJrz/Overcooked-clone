@@ -6,6 +6,8 @@ public class ClearCounter : MonoBehaviour
 {
     [SerializeField] private ClearCounter clearCounter;
     [SerializeField] private GameObject visualGameObject;
+    [SerializeField] private KitchenObjectsSO kitchenObjectSO;
+    [SerializeField] private Transform spawnPoint;
 
     private void Start() {
         Player.Instance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
@@ -22,6 +24,10 @@ public class ClearCounter : MonoBehaviour
 
     public void Interact() {
         Debug.Log("Interact");
+        Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab, spawnPoint);
+        kitchenObjectTransform.localPosition = Vector3.zero;
+
+        Debug.Log(kitchenObjectTransform.GetComponent<KitchenObject>().GetKitchenObjectSO().name);
     }
 
     private void Show() {
