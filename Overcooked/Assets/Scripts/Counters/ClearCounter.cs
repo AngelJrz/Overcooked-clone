@@ -13,17 +13,20 @@ public class ClearCounter : MonoBehaviour
 
     private KitchenObject kitchenObject;
 
-    public KitchenObject KitchenObject {
-        get { return kitchenObject; }
-        set { kitchenObject = value; }
+    public void SetKitchenObject(KitchenObject kitchenObject) {
+        this.kitchenObject = kitchenObject;
+    }
+
+    public KitchenObject GetKitchenObject() {
+        return this.kitchenObject;
     }
 
     public void ClearKitchenObject() {
-        this.KitchenObject = null;
+        this.kitchenObject = null;
     }
 
     public bool HasKitchenObject() {
-        return this.KitchenObject != null;
+        return this.kitchenObject != null;
     }
 
     public Transform GetCounterSpawnPoint() {
@@ -34,7 +37,7 @@ public class ClearCounter : MonoBehaviour
     private void Update() {
         if(testing && Input.GetKeyDown(KeyCode.T)) {
             if(kitchenObject != null) {
-                kitchenObject.ClearCounter = secondClearCounter;
+                kitchenObject.SetClearCounter(secondClearCounter);
             }
         }
     }
@@ -56,7 +59,7 @@ public class ClearCounter : MonoBehaviour
         if (kitchenObject == null)
         {
             Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab, spawnPoint);
-            kitchenObjectTransform.GetComponent<KitchenObject>().ClearCounter = this;
+            kitchenObjectTransform.GetComponent<KitchenObject>().SetClearCounter(this);
         } else {
             Debug.LogError("Counter already has an Object");
         }
