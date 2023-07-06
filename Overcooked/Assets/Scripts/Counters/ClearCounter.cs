@@ -5,9 +5,39 @@ using UnityEngine;
 public class ClearCounter : MonoBehaviour
 {
     [SerializeField] private ClearCounter clearCounter;
+    [SerializeField] private ClearCounter secondClearCounter;
     [SerializeField] private GameObject visualGameObject;
     [SerializeField] private KitchenObjectsSO kitchenObjectSO;
     [SerializeField] private Transform spawnPoint;
+    [SerializeField] private bool testing;
+
+    private KitchenObject kitchenObject;
+
+    public KitchenObject KitchenObject {
+        get { return kitchenObject; }
+        set { kitchenObject = value; }
+    }
+
+    public void ClearKitchenObject() {
+        this.KitchenObject = null;
+    }
+
+    public bool HasKitchenObject() {
+        return this.KitchenObject != null;
+    }
+
+    public Transform GetCounterSpawnPoint() {
+        return spawnPoint;
+    }
+
+
+    private void Update() {
+        if(testing && Input.GetKeyDown(KeyCode.T)) {
+            if(kitchenObject != null) {
+                kitchenObject.ClearCounter = secondClearCounter;
+            }
+        }
+    }
 
     private void Start() {
         Player.Instance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
@@ -23,11 +53,13 @@ public class ClearCounter : MonoBehaviour
     }
 
     public void Interact() {
-        Debug.Log("Interact");
-        Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab, spawnPoint);
-        kitchenObjectTransform.localPosition = Vector3.zero;
-
-        Debug.Log(kitchenObjectTransform.GetComponent<KitchenObject>().GetKitchenObjectSO().name);
+        if (kitchenObject == null)
+        {
+            Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab, spawnPoint);
+            kitchenObjectTransform.GetComponent<KitchenObject>().ClearCounter = this;
+        } else {
+            Debug.LogError("Counter already has an Object");
+        }
     }
 
     private void Show() {
