@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClearCounter : MonoBehaviour
+public class ClearCounter : MonoBehaviour, IKitchenObjectParent
 {
     [SerializeField] private ClearCounter clearCounter;
     [SerializeField] private ClearCounter secondClearCounter;
@@ -33,43 +33,25 @@ public class ClearCounter : MonoBehaviour
         return spawnPoint;
     }
 
-
-    private void Update() {
-        if(testing && Input.GetKeyDown(KeyCode.T)) {
-            if(kitchenObject != null) {
-                kitchenObject.SetClearCounter(secondClearCounter);
-            }
-        }
-    }
-
     private void Start() {
         Player.Instance.OnSelectedCounterChanged += Player_OnSelectedCounterChanged;
     }
 
     private void Player_OnSelectedCounterChanged(object sender, Player.OnSelectedCounterChangedEventArgs e) {
         if (e.selectedCounter == clearCounter) {
-            Show();
+            visualGameObject.SetActive(true);
         }
         else {
-            Hide();
+            visualGameObject.SetActive(false);
         }
     }
 
-    public void Interact() {
-        if (kitchenObject == null)
-        {
+    public void Interact(Player player) {
+        if (kitchenObject == null) {
             Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab, spawnPoint);
-            kitchenObjectTransform.GetComponent<KitchenObject>().SetClearCounter(this);
+            kitchenObjectTransform.GetComponent<KitchenObject>().SetNewParent(this);
         } else {
-            Debug.LogError("Counter already has an Object");
+            kitchenObject.SetNewParent(player);
         }
-    }
-
-    private void Show() {
-        visualGameObject.SetActive(true);
-    }
-
-    private void Hide() {
-        visualGameObject.SetActive(false);
     }
 }

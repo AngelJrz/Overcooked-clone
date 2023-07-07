@@ -7,25 +7,25 @@ public class KitchenObject : MonoBehaviour
 {
     [SerializeField] private KitchenObjectsSO kitchenObjectSO;
 
-	private ClearCounter currentClearCounter;
+	private IKitchenObjectParent kitchenObjectParent;
 
-	public ClearCounter GetClearCounter() {
-		return currentClearCounter;
+	public IKitchenObjectParent GetKitchenObjectParent() {
+		return kitchenObjectParent;
 	}
 
-	public void SetClearCounter(ClearCounter newClearCounter) {
-        if (this.currentClearCounter != null) {
-            this.currentClearCounter.ClearKitchenObject();
+	public void SetNewParent(IKitchenObjectParent newKitchenObjectParent) {
+        if (this.kitchenObjectParent != null) {
+            this.kitchenObjectParent.ClearKitchenObject();
         }
 
-        if (newClearCounter.HasKitchenObject()) {
+        if (newKitchenObjectParent.HasKitchenObject()) {
             Debug.LogError("Counter already has an Object");
         } else {
 
-            this.currentClearCounter = newClearCounter;
-            this.currentClearCounter.SetKitchenObject(this);
+            this.kitchenObjectParent = newKitchenObjectParent;
+            this.kitchenObjectParent.SetKitchenObject(this);
 
-            transform.parent = currentClearCounter.GetCounterSpawnPoint();
+            transform.parent = kitchenObjectParent.GetCounterSpawnPoint();
             transform.localPosition = Vector3.zero;
         }
     }
