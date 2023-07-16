@@ -5,15 +5,12 @@ using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class CuttingCounter : BaseCounter
+public class CuttingCounter : BaseCounter, IHasProses
 {
     [SerializeField] CuttingRecipeSO[] cuttingRecipeSOArray;
     private int cuttingProgres;
     public event EventHandler OnCutAnimation;
-    public event EventHandler<CuttinCounter_OnCuttingActionEventArgs> OnCuttingAction;
-    public class CuttinCounter_OnCuttingActionEventArgs : EventArgs {
-        public float progress;
-    }
+    public event EventHandler<IHasProses.OnProgressActionEventArgs> OnProgressAction;
 
     public override void Interact(Player player) {
         if (!HasKitchenObject()) {
@@ -72,7 +69,7 @@ public class CuttingCounter : BaseCounter
 
     private void CuttingActionProgress(float progress) {
         OnCutAnimation?.Invoke(this, EventArgs.Empty);
-        OnCuttingAction?.Invoke(this, new CuttinCounter_OnCuttingActionEventArgs() {
+        OnProgressAction?.Invoke(this, new IHasProses.OnProgressActionEventArgs() {
             progress = progress
         });
     }

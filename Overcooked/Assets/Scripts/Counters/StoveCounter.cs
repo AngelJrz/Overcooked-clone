@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.Xml.Serialization;
 using UnityEngine;
 
-public class StoveCounter : BaseCounter {
+public class StoveCounter : BaseCounter, IHasProses {
     [SerializeField] private FryRecipeSO[] fryRecipesArray;
 
     public event EventHandler<StoveStateChangeArgs> OnStoveStateChange;
+    public event EventHandler<IHasProses.OnProgressActionEventArgs> OnProgressAction;
+
     public class StoveStateChangeArgs : EventArgs {
         public State newState;
     }
@@ -34,6 +36,7 @@ public class StoveCounter : BaseCounter {
                 ChangeStoveVisualState(State.Frying);
 
                 fryinTimer += Time.deltaTime;
+                UpdateProgressBar(fryinTimer / fryRecipeSO.fryingTimerMax);
                 if (fryinTimer > fryRecipeSO.fryingTimerMax) {
                     ResetTimer();
                     GetKitchenObject().DestroySelf();
@@ -95,5 +98,12 @@ public class StoveCounter : BaseCounter {
     private void TurnOffStove() {
         currentState = State.Idle;
         fryinTimer = 0f;
+        UpdateProgressBar(0);
+    }
+
+    private void UpdateProgressBar(float newProgress) {
+        OnProgressAction?.Invoke(this, new IHasProses.OnProgressActionEventArgs() {
+            progress = newProgress
+        });
     }
 }
