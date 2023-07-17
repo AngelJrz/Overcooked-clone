@@ -63,7 +63,14 @@ public class StoveCounter : BaseCounter, IHasProses {
                 }
             }
         } else {
-            if (!player.HasKitchenObject()) {
+            if (player.HasKitchenObject()) {
+                if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject)) {
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO())) {
+                        GetKitchenObject().DestroySelf();
+                        TurnOffStove();
+                    }
+                }
+            } else {
                 GetKitchenObject().SetNewParent(player);
                 TurnOffStove();
             }
