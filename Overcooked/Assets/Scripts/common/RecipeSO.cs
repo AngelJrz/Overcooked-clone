@@ -6,5 +6,5 @@ using UnityEngine;
 public class RecipeSO : ScriptableObject
 {
     public string recipeName;
-    public List<KitchenObjectsSO> ingredientSO;
+    public List<KitchenObjectsSO> ingredientsSO;
 }

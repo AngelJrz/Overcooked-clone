@@ -29,6 +29,7 @@ public class CuttingCounter : BaseCounter, IHasProses
                 }
             } else {
                 GetKitchenObject().SetNewParent(player);
+                CuttingActionProgress(0);
             }
         }
     }
