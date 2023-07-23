@@ -13,6 +13,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     public class OnSelectedCounterChangedEventArgs : EventArgs {
         public BaseCounter selectedCounter;
     }
+    public event EventHandler OnPickObject;
 
 
     [SerializeField] private float moveSpeed = 9f;
@@ -25,6 +26,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
     private Vector3 lastInteractDir;
     private BaseCounter selectedCounter;
     private KitchenObject kitchenObject;
+    private bool isWalking;
 
 
     private void Awake() {
@@ -126,8 +128,12 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
         //**********************************
         // Set animation
         //**********************************
-        bool isWalking = moveDir != Vector3.zero;
+        isWalking = moveDir != Vector3.zero;
         animator.SetBool("IsWalking", isWalking);
+    }
+
+    public bool IsWalking() {
+        return isWalking;
     }
 
     private void SetSelectedCounter(BaseCounter counter) {
@@ -139,6 +145,10 @@ public class Player : MonoBehaviour, IKitchenObjectParent {
 
     public void SetKitchenObject(KitchenObject kitchenObject) {
         this.kitchenObject = kitchenObject;
+
+        if (kitchenObject != null) {
+            OnPickObject?.Invoke(this, EventArgs.Empty);
+        }
     }
 
     public KitchenObject GetKitchenObject() {
