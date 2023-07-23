@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: MegaBurger 1
   m_EditorClassIdentifier: 
   recipeName: MegaBurger
-  ingredientSO:
+  ingredientsSO:
   - {fileID: 11400000, guid: d13aca33f4239bb4da40604733fde8d3, type: 2}
-  - {fileID: 11400000, guid: 403d7a2bead8ac04ab808d6f78c44967, type: 2}
-  - {fileID: 11400000, guid: 48535504e5d49104d961511dbb8f6ec4, type: 2}
   - {fileID: 11400000, guid: 8a2e867643d7c104f99733658e03d8b4, type: 2}
+  - {fileID: 11400000, guid: 48535504e5d49104d961511dbb8f6ec4, type: 2}
+  - {fileID: 11400000, guid: 403d7a2bead8ac04ab808d6f78c44967, type: 2}
   - {fileID: 11400000, guid: 89171841f12a8a442873487524bdcde4, type: 2}
