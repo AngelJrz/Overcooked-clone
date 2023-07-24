@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; set; }
@@ -17,7 +18,8 @@ public class GameManager : MonoBehaviour {
 
     private float waitingToStartTimer = 1f;
     private float countdownToStartTimer = 3f;
-    private float gamePlayingTimer = 5f;
+    private float gamePlayingTimer;
+    private float gamePlayingTimerMax = 20f;
     private float countDownEnd = 0f;
 
     private State state;
@@ -39,6 +41,7 @@ public class GameManager : MonoBehaviour {
             case State.CountdownToStart:
                 countdownToStartTimer -= Time.deltaTime;
                 if (countdownToStartTimer < countDownEnd) {
+                    gamePlayingTimer = gamePlayingTimerMax;
                     state = State.GamePlaying;
                     OnChangeCountDown?.Invoke(this, EventArgs.Empty);
                 }
@@ -53,8 +56,6 @@ public class GameManager : MonoBehaviour {
             case State.GameOver:
                 break;
         }
-
-        Debug.Log(state);
     }
 
     public bool IsGamePlaying() {
@@ -65,7 +66,38 @@ public class GameManager : MonoBehaviour {
         return state == State.CountdownToStart;
     }
 
+    public bool IsGameOver() {
+        return state == State.GameOver;
+    }
+
     public float GetCountdownTimer() {
         return countdownToStartTimer;
+    }
+
+    public bool IsPlaying() {
+        return state == State.GamePlaying;
+    }
+
+    public float GetGamePlayingTimerNormalized() {
+        return Math.Abs(gamePlayingTimer / gamePlayingTimerMax);
+    }
+}
+
+public static class Loader {
+    public enum GameScene {
+        GameScene,
+        LoadingScene,
+        MainMenuScene
+    }
+
+    private static GameScene targetScene;
+
+    public static void Load(GameScene targetScene) {
+        Loader.targetScene = targetScene;
+        SceneManager.LoadScene(GameScene.LoadingScene.ToString());
+    }
+
+    public static void LoaderCallBack() {
+        SceneManager.LoadScene(targetScene.ToString());
     }
 }
