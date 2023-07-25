@@ -15,18 +15,28 @@ public class GameManager : MonoBehaviour {
     }
 
     public event EventHandler OnChangeCountDown;
+    public event EventHandler OnPause;
+    public event EventHandler OnUnPause;
 
     private float waitingToStartTimer = 1f;
     private float countdownToStartTimer = 3f;
     private float gamePlayingTimer;
     private float gamePlayingTimerMax = 20f;
     private float countDownEnd = 0f;
-
     private State state;
+    private bool isGamePaused = false;
 
     private void Awake() {
         state = State.WaitingToStart;
         Instance = this;
+    }
+
+    private void Start() {
+        GameInput.Instance.OnPauseInteraction += Instance_OnPauseInteraction;
+    }
+
+    private void Instance_OnPauseInteraction(object sender, EventArgs e) {
+        TogglePause();
     }
 
     private void Update() {
@@ -80,6 +90,18 @@ public class GameManager : MonoBehaviour {
 
     public float GetGamePlayingTimerNormalized() {
         return Math.Abs(gamePlayingTimer / gamePlayingTimerMax);
+    }
+
+    public void TogglePause() {
+        isGamePaused = !isGamePaused;
+        if (isGamePaused) {
+            //with this you pause all delta Times
+            Time.timeScale = 0f;
+            OnPause?.Invoke(this, EventArgs.Empty);
+        } else {
+            Time.timeScale = 1f;
+            OnUnPause?.Invoke(this, EventArgs.Empty);
+        }
     }
 }
 
