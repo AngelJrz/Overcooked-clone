@@ -6,9 +6,12 @@ public class SoundManager : MonoBehaviour {
 
     public static SoundManager instance;
     [SerializeField] private SoundsReferenceSO soundsCollection;
+    private float volumeMultiplier;
+    private string EFFECTS_VOLUME = "effecstVolume";
 
     private void Awake() {
         instance = this;
+        volumeMultiplier = PlayerPrefs.GetFloat(EFFECTS_VOLUME, 5f);
     }
 
     public void Start() {
@@ -54,10 +57,24 @@ public class SoundManager : MonoBehaviour {
     }
 
     private void PlaySound(AudioClip audioClip, Vector3 position, float volume = 1f) {
-        AudioSource.PlayClipAtPoint(audioClip, position, volume);
+        AudioSource.PlayClipAtPoint(audioClip, position, volume * volumeMultiplier);
     }
 
     public void PlayFootsteps(Vector3 position, float volume) {
         PlaySound(soundsCollection.footstep, position, volume);
+    }
+
+    public void ChangeVolume() {
+        volumeMultiplier += .1f;
+        if (volumeMultiplier > 1f) {
+            volumeMultiplier = 0f;
+        }
+
+        PlayerPrefs.SetFloat(EFFECTS_VOLUME, volumeMultiplier);
+        PlayerPrefs.Save();
+    }
+
+    public float GetVolume() {
+        return volumeMultiplier;
     }
 }
