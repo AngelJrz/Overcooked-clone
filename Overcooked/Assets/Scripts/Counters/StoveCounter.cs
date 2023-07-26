@@ -30,10 +30,8 @@ public class StoveCounter : BaseCounter, IHasProses {
     private void Update() {
         switch (currentState) {
             case State.Idle:
-                ChangeStoveVisualState(State.Idle);
                 break;
             case State.Frying:
-                ChangeStoveVisualState(State.Frying);
 
                 fryinTimer += Time.deltaTime;
                 UpdateProgressBar(fryinTimer / fryRecipeSO.fryingTimerMax);
@@ -60,6 +58,7 @@ public class StoveCounter : BaseCounter, IHasProses {
                     player.GetKitchenObject().SetNewParent(this);
                     fryRecipeSO = GetFryingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
                     currentState = State.Frying;
+                    ChangeStoveVisualState(State.Frying);
                 }
             }
         } else {
@@ -104,6 +103,7 @@ public class StoveCounter : BaseCounter, IHasProses {
 
     private void TurnOffStove() {
         currentState = State.Idle;
+        ChangeStoveVisualState(State.Idle);
         fryinTimer = 0f;
         UpdateProgressBar(0);
     }
