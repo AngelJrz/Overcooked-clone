@@ -64,6 +64,10 @@ public class SoundManager : MonoBehaviour {
         PlaySound(soundsCollection.footstep, position, volume);
     }
 
+    public void PlayCoundownSound() {
+        PlaySound(soundsCollection.warning[0], Vector3.zero);
+    }
+
     public void ChangeVolume() {
         volumeMultiplier += .1f;
         if (volumeMultiplier > 1f) {
