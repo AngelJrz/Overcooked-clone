@@ -68,6 +68,10 @@ public class SoundManager : MonoBehaviour {
         PlaySound(soundsCollection.warning[0], Vector3.zero);
     }
 
+    public void PlayWarningSound(Vector3 position) {
+        PlaySound(soundsCollection.warning, position);
+    }
+
     public void ChangeVolume() {
         volumeMultiplier += .1f;
         if (volumeMultiplier > 1f) {

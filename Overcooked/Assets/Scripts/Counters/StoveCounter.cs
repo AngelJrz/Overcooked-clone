@@ -17,6 +17,7 @@ public class StoveCounter : BaseCounter, IHasProses {
     private float fryinTimer;
     private FryRecipeSO fryRecipeSO;
     private State currentState;
+    private bool isFried = false;
     public enum State
     {
         Idle,
@@ -41,6 +42,7 @@ public class StoveCounter : BaseCounter, IHasProses {
                     KitchenObject.SpawnKitchenObject(fryRecipeSO.output, this);
                     if (HasFryRecipe(GetKitchenObject().GetKitchenObjectSO())) {
                         fryRecipeSO = GetFryingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
+                        isFried = true;
                     } else {
                         TurnOffStove();
                     }
@@ -105,6 +107,7 @@ public class StoveCounter : BaseCounter, IHasProses {
         currentState = State.Idle;
         ChangeStoveVisualState(State.Idle);
         fryinTimer = 0f;
+        isFried = false;
         UpdateProgressBar(0);
     }
 
@@ -112,5 +115,9 @@ public class StoveCounter : BaseCounter, IHasProses {
         OnProgressAction?.Invoke(this, new IHasProses.OnProgressActionEventArgs() {
             progress = newProgress
         });
+    }
+
+    public bool IsFried() {
+        return isFried;
     }
 }
